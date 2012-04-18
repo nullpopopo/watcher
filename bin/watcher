@@ -1,0 +1,31 @@
+#!/bin/bash
+REPORTTO=root
+
+case $1 in
+  [nN][aA][mM][eE][dD]|[dD][nN][sS]|[bB][iI][nN][dD])
+    DAEMON=$(basename /etc/init.d/named)
+    IPADDR=10.146.99.19
+    PORT=53
+    if [ ! 2 = $(netstat -lnut | grep "${IPADDR}:${PORT}" | wc -l) ]
+      then
+        [ -f /var/run/named/named.pid ] && \
+        sudo rm -f /var/run/named/named.pid
+        sudo /etc/init.d/${DAEMON} start &&
+        echo "$(uname -n) ${DAEMON} restarted" | \
+        mail -s "$(date) $(uname -n) $DAEMON restarted" $REPORTTO
+    fi
+  ;;
+  [sS][eE][nN][dD][mM][aA][iI][lL]|[mM][aA][iI][lL])
+    DAEMON=$(basename /etc/init.d/sendmail)
+    IPADDR=127.0.0.1
+    PORT=25
+    if [ ! 1 = $(netstat -lnt | grep "${IPADDR}:${PORT}" | wc -l) ]
+      then
+        [ -f /var/run/sendmail.pid ] && \
+        sudo rm -f /var/run/sendmail.pid
+        sudo /etc/init.d/${DAEMON} start &&
+        echo "$(uname -n) ${DAEMON} restarted" | \
+        mail -s "$(date) $(uname -n) $DAEMON restarted" $REPORTTO
+    fi
+  ;;
+esac
