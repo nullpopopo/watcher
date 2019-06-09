@@ -1,1 +1,4 @@
-1st released
+Usage :
+        Syntax) WATCHER <MODE> <TARGET>
+        WATCHER ping example.com
+        WATCHER http https://example.com/
