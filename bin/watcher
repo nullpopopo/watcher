@@ -24,7 +24,8 @@ MESSAGE="${TARGET} ${MODE^^} NG"
 
 LOGFILE=${LOGDIR}/${DATE_TODAY}_${PROGNAME}_${MODE^^}.log
 LOGFILE_OLDEST=${LOGDIR}/${DATE_LATEST}_${PROGNAME}_${MODE^^}.log
-ERROR_COUNTFILE=${TMPDIR}/${PROGNAME}_${MODE^^}_${TARGET}.error
+ERROR_TARGET=$(echo ${TARGET} | sed -e "s/^http:\/\///g" -e "s/^https:\/\///g" -e "s/\/$//")
+ERROR_COUNTFILE=${TMPDIR}/${PROGNAME}_${MODE^^}_${ERROR_TARGET}.error
 ################################################################################
 
 
@@ -144,7 +145,6 @@ fi
 
 ################################################################################
 ERROR_FUNCTION(){
-##--@--##
 echo -e "${DATE}\t${PROGNAME}\t${STATMSG}\t${MESSAGE}"          | \
   tee -a ${ERROR_COUNTFILE}                                | \
   tee -a ${LOGFILE}
